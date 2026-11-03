@@ -1,26 +1,53 @@
-const themeButtons = document.querySelectorAll('.header__theme-menu-button');
+/* проверяем сохранён ли выбор темы*/
+(function initTheme() {
+  const theme = localStorage.getItem('theme');
+  if (theme) {
+    setTheme(theme);
+  }
+})();
 
-themeButtons.forEach((button) => {
-  button.addEventListener('click', () => {
-    // Определяем тему по классу кнопки
-    let theme = '';
-    if (button.classList.contains('header__theme-menu-button_type_light')) {
-      theme = 'theme-light';
-    } else if (button.classList.contains('header__theme-menu-button_type_dark')) {
-      theme = 'theme-dark';
-    } else if (button.classList.contains('header__theme-menu-button_type_auto')) {
-      theme = 'theme-auto';
-    }
+document.addEventListener('DOMContentLoaded', () => {
+  const currentTheme = [...document.documentElement.classList]
+    .find((cn) => cn.startsWith('theme-'))
+    ?.replace('theme-', '');
+  const themeButtons = [
+    ...document.querySelectorAll('.header__theme-menu-button'),
+  ];
+  setActiveButton(themeButtons, currentTheme);
 
-    // Меняем класс у <html>
-    document.documentElement.className = theme;
-    
-    // Переключаем активную кнопку
-    themeButtons.forEach((btn) => {
-      btn.classList.remove('header__theme-menu-button_active');
-      btn.removeAttribute('disabled');
+  themeButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const chosenTheme = [...button.classList]
+        .find((cn) => cn.includes('_type_'))
+        .split('_type_')[1];
+      setTheme(chosenTheme);
+      setActiveButton(themeButtons, chosenTheme);
     });
-    button.classList.add('header__theme-menu-button_active');
-    button.setAttribute('disabled', 'true');
   });
 });
+
+function setTheme(theme) {
+  document.documentElement.className = '';
+  document.documentElement.classList.add(`theme-${theme}`);
+  localStorage.setItem('theme', theme);
+}
+
+function setActiveButton(buttonsArray, theme) {
+  buttonsArray.forEach((button) => {
+    button.classList.remove('header__theme-menu-button_active');
+    button.removeAttribute('disabled');
+  });
+  const target = buttonsArray.find((button) =>
+    button.classList.contains(`header__theme-menu-button_type_${theme}`)
+  );
+  if (target) {
+    target.classList.add('header__theme-menu-button_active');
+    target.setAttribute('disabled', true);
+  } else {
+    const autoButton = document.querySelector(
+      '.header__theme-menu-button_type_auto'
+    );
+    autoButton.classList.add('header__theme-menu-button_active');
+    autoButton.setAttribute('disabled', true);
+  }
+}
