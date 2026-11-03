@@ -2,3 +2,22 @@
   Переменные для вашего проекта
   и их переопределение под различные устройства
 */
+:root {
+  /* Переменные тёмной темы (по умолчанию) */
+  --bg-color: #000028;
+  --bg-image: url('../images/cover-image-dark.png');
+  --accent-color: #ff0070;
+  --text-color: #f1b2ce;
+  --title-color: #db00ff;
+  --title-decor-bg: #ff0070;
+  --title-decor-color: #000028;
+  --button-hover-border: rgba(255, 0, 112, 0.4);
+  
+  /* Общие переменные */
+  --font-family: 'IBM Plex Mono', monospace;
+  --font-size-base: 18px;
+  --gap-mobile: 10px;
+  --gap-desktop: 20px;
+  --padding: clamp(10px, 0.028rem + 2.8vw, 20px);
+  --header-footer-min-height: 668px;
+}
